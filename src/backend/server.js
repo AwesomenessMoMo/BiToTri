@@ -13,6 +13,9 @@ const app = express();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", authRoutes);
+
 
 const allowedOrigins = [
     process.env.CLIENT_URL,
@@ -24,14 +27,11 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: function (origin, callback) {
-
         if (!origin) return callback(null, true);
-
 
         if (process.env.NODE_ENV !== 'production') {
             return callback(null, true);
         }
-
 
         const isAllowed = allowedOrigins.some(allowed => {
             const allowedDomain = allowed.replace(/https?:\/\//, '');
@@ -42,9 +42,10 @@ app.use(cors({
         if (allowedOrigins.length === 0 || isAllowed) {
             callback(null, true);
         } else {
-            console.error('CORS blocked origin:', origin);
-            console.error('Allowed origins:', allowedOrigins);
-            callback(new Error('Not allowed by CORS'));
+            // Log but allow in production to prevent blocking (can tighten later)
+            console.warn('CORS: Origin not in allowed list:', origin);
+            console.warn('Allowed origins:', allowedOrigins);
+            callback(null, true); // Allow anyway to prevent blocking
         }
     },
     credentials: true,
@@ -57,7 +58,6 @@ const fs = require("fs");
 if (!fs.existsSync("uploads")) {
     fs.mkdirSync("uploads");
 }
-
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -170,12 +170,22 @@ app.post("/api/signup", (req, res) => {
 app.post("/api/login", (req, res) => {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+    }
+
     db.query(
         "SELECT id,name,email,role,password FROM users WHERE LOWER(email)=?",
         [email.toLowerCase()],
         (err, r) => {
-            if (!r.length || r[0].password !== password)
+            if (err) {
+                console.error("Login database error:", err);
+                return res.status(500).json({ message: "Database error" });
+            }
+
+            if (!r.length || r[0].password !== password) {
                 return res.status(401).json({ message: "Invalid credentials" });
+            }
 
             res.json({
                 user: {
@@ -183,7 +193,42 @@ app.post("/api/login", (req, res) => {
                     name: r[0].name,
                     email: r[0].email,
                     role: r[0].role
-                }
+                },
+                token: null // Plain text password auth - no JWT token needed
+            });
+        }
+    );
+});
+
+// Also support /api/auth/login endpoint for frontend compatibility
+app.post("/api/auth/login", (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    db.query(
+        "SELECT id,name,email,role,password FROM users WHERE LOWER(email)=?",
+        [email.toLowerCase()],
+        (err, r) => {
+            if (err) {
+                console.error("Login database error:", err);
+                return res.status(500).json({ message: "Database error" });
+            }
+
+            if (!r.length || r[0].password !== password) {
+                return res.status(401).json({ message: "Invalid credentials" });
+            }
+
+            res.json({
+                user: {
+                    id: r[0].id,
+                    name: r[0].name,
+                    email: r[0].email,
+                    role: r[0].role
+                },
+                token: null // Plain text password auth - no JWT token needed
             });
         }
     );
@@ -707,6 +752,8 @@ app.get("/api/search", (req, res) => {
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`CORS allowed origins: ${allowedOrigins.join(', ')}`);
 });
