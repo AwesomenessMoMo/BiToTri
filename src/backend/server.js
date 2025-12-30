@@ -24,7 +24,7 @@ const allowedOrigins = [
     process.env.FRONTEND_URL,
     "https://bitotri-frontend-production.up.railway.app",
     "http://localhost:3000"
-].filter(Boolean); // Remove undefined values
+].filter(Boolean); 
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -63,7 +63,7 @@ if (!fs.existsSync("uploads")) {
     fs.mkdirSync("uploads");
 }
 
-// Database connection is handled in config/db.js
+
 
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
