@@ -19,6 +19,7 @@ const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.RAILWAY_PUBLIC_DOMAIN,
     process.env.FRONTEND_URL,
+    "https://bitotri-frontend-production.up.railway.app",
     "http://localhost:3000"
 ].filter(Boolean); // Remove undefined values
 
@@ -33,9 +34,18 @@ app.use(cors({
         }
         
         // In production, check if origin is in allowed list
-        if (allowedOrigins.length === 0 || allowedOrigins.some(allowed => origin.includes(allowed.replace(/https?:\/\//, '')))) {
+        // Check exact match first, then check domain match
+        const isAllowed = allowedOrigins.some(allowed => {
+            const allowedDomain = allowed.replace(/https?:\/\//, '');
+            const originDomain = origin.replace(/https?:\/\//, '');
+            return origin === allowed || originDomain.includes(allowedDomain) || allowedDomain.includes(originDomain);
+        });
+        
+        if (allowedOrigins.length === 0 || isAllowed) {
             callback(null, true);
         } else {
+            console.error('CORS blocked origin:', origin);
+            console.error('Allowed origins:', allowedOrigins);
             callback(new Error('Not allowed by CORS'));
         }
     },
