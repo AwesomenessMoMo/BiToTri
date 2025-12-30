@@ -10,13 +10,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const app = express();
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(express.json());
-
-const authRoutes = require("./routes/auth");
-app.use("/api/auth", authRoutes);
-
-
+// CORS must be configured BEFORE any routes
 const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.RAILWAY_PUBLIC_DOMAIN,
@@ -25,41 +19,60 @@ const allowedOrigins = [
     "http://localhost:3000"
 ].filter(Boolean); 
 
+// CORS configuration - MUST be before any routes to handle preflight OPTIONS requests
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) {
+            return callback(null, true);
+        }
 
+        // In development, allow all origins
         if (process.env.NODE_ENV !== 'production') {
             return callback(null, true);
         }
 
+        // Check exact match first
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        // Check domain match (handle Railway subdomains)
+        const originDomain = origin.replace(/^https?:\/\//, '').toLowerCase();
         const isAllowed = allowedOrigins.some(allowed => {
-            const allowedDomain = allowed.replace(/https?:\/\//, '');
-            const originDomain = origin.replace(/https?:\/\//, '');
-            return origin === allowed || originDomain.includes(allowedDomain) || allowedDomain.includes(originDomain);
+            if (!allowed) return false;
+            const allowedDomain = allowed.replace(/^https?:\/\//, '').toLowerCase();
+            return originDomain === allowedDomain;
         });
 
-        if (allowedOrigins.length === 0 || isAllowed) {
-            callback(null, true);
-        } else {
-            // Log but allow in production to prevent blocking (can tighten later)
-            console.warn('CORS: Origin not in allowed list:', origin);
-            console.warn('Allowed origins:', allowedOrigins);
-            callback(null, true); // Allow anyway to prevent blocking
+        if (isAllowed) {
+            return callback(null, true);
         }
+
+        // Log the issue but allow to prevent blocking
+        console.warn('CORS: Origin not in allowed list:', origin);
+        console.warn('Allowed origins:', allowedOrigins);
+        callback(null, true);
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    exposedHeaders: [],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 }));
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.json());
+
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", authRoutes);
 
 const fs = require("fs");
 
 if (!fs.existsSync("uploads")) {
     fs.mkdirSync("uploads");
 }
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
