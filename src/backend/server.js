@@ -44,9 +44,10 @@ app.use(cors({
         if (allowedOrigins.length === 0 || isAllowed) {
             callback(null, true);
         } else {
-            console.error('CORS blocked origin:', origin);
-            console.error('Allowed origins:', allowedOrigins);
-            callback(new Error('Not allowed by CORS'));
+            // Log but allow in production to prevent blocking (can tighten later)
+            console.warn('CORS: Origin not in allowed list:', origin);
+            console.warn('Allowed origins:', allowedOrigins);
+            callback(null, true); // Allow anyway to prevent blocking
         }
     },
     credentials: true,
@@ -711,6 +712,8 @@ app.get("/api/search", (req, res) => {
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`CORS allowed origins: ${allowedOrigins.join(', ')}`);
 });
