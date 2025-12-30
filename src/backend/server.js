@@ -14,33 +14,31 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 
 
-// CORS configuration - allow multiple origins for Railway deployment
 const allowedOrigins = [
     process.env.CLIENT_URL,
     process.env.RAILWAY_PUBLIC_DOMAIN,
     process.env.FRONTEND_URL,
     "https://bitotri-frontend-production.up.railway.app",
     "http://localhost:3000"
-].filter(Boolean); // Remove undefined values
+].filter(Boolean); 
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (mobile apps, Postman, etc.)
+
         if (!origin) return callback(null, true);
-        
-        // In development, allow all origins
+
+
         if (process.env.NODE_ENV !== 'production') {
             return callback(null, true);
         }
-        
-        // In production, check if origin is in allowed list
-        // Check exact match first, then check domain match
+
+
         const isAllowed = allowedOrigins.some(allowed => {
             const allowedDomain = allowed.replace(/https?:\/\//, '');
             const originDomain = origin.replace(/https?:\/\//, '');
             return origin === allowed || originDomain.includes(allowedDomain) || allowedDomain.includes(originDomain);
         });
-        
+
         if (allowedOrigins.length === 0 || isAllowed) {
             callback(null, true);
         } else {
@@ -59,8 +57,6 @@ const fs = require("fs");
 if (!fs.existsSync("uploads")) {
     fs.mkdirSync("uploads");
 }
-
-// Database connection is handled in config/db.js
 
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -82,18 +78,18 @@ app.get("/", (req, res) => {
     res.send("Bi To Tri Backend is running!");
 });
 
-// Health check endpoint
+
 app.get("/api/health", (req, res) => {
     db.query("SELECT 1", (err) => {
         if (err) {
-            return res.status(500).json({ 
-                status: "error", 
+            return res.status(500).json({
+                status: "error",
                 message: "Database connection failed",
-                error: err.message 
+                error: err.message
             });
         }
-        res.json({ 
-            status: "ok", 
+        res.json({
+            status: "ok",
             message: "Backend and database are connected",
             timestamp: new Date().toISOString()
         });
