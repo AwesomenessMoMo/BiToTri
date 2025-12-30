@@ -1,11 +1,12 @@
 const mysql = require("mysql2");
 
+// Support both standard format (MYSQL_HOST) and Railway format (MYSQLHOST)
 const db = mysql.createPool({
-  host: process.env.MYSQL_HOST || "localhost",
-  user: process.env.MYSQL_USER || "root",
-  password: process.env.MYSQL_PASSWORD || "",
-  database: process.env.MYSQL_DATABASE || "bitotri",
-  port: process.env.MYSQL_PORT || 3306,
+  host: process.env.MYSQL_HOST || process.env.MYSQLHOST || "localhost",
+  user: process.env.MYSQL_USER || process.env.MYSQLUSER || "root",
+  password: process.env.MYSQL_PASSWORD || process.env.MYSQLPASSWORD || "",
+  database: process.env.MYSQL_DATABASE || process.env.MYSQLDATABASE || "bitotri",
+  port: process.env.MYSQL_PORT || process.env.MYSQLPORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0

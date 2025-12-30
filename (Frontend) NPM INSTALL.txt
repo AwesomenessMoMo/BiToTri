@@ -1,1 +1,0 @@
-npm install react react-dom react-scripts react-router-dom @mui/material @mui/icons-material @emotion/react @emotion/styled styled-components bootstrap react-icons
