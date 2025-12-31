@@ -42,7 +42,7 @@ function App() {
 
         {/* Toast Popup */}
         <ToastContainer
-          position="top-right"
+          position="top-middle"
           autoClose={1000}
           hideProgressBar={true}
           newestOnTop
