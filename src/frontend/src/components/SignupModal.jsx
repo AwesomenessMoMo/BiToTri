@@ -31,14 +31,13 @@ function SignupModal({ close, openLogin }) {
 
       const data = res.data || {};
       const user = data.user || data;
-      const token = data.token || data.accessToken;
 
-      if (!user) {
-        setError("Signup failed");
+      if (!user || !user.id) {
+        setError("Signup failed: invalid response");
         return;
       }
 
-      login(user, token);
+      login(user);
       close();
     } catch (err) {
       setError(err?.response?.data?.message || "Server not reachable");

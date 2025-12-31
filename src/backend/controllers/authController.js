@@ -5,15 +5,53 @@ const jwt = require("jsonwebtoken");
 exports.register = (req, res) => {
     const { name, email, password } = req.body;
 
-    bcrypt.hash(password, 10, (err, hash) => {
-        db.query(
-            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-            [name, email, hash],
-            (err) => {
-                if (err) return res.json({ error: err });
-                res.json({ message: "User registered successfully" });
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: "Name, email, and password are required" });
+    }
+
+    // Check if email already exists
+    db.query("SELECT id FROM users WHERE LOWER(email) = ?", [email.toLowerCase()], (err, result) => {
+        if (err) {
+            console.error("Register database error:", err);
+            return res.status(500).json({ message: "Database error" });
+        }
+
+        if (result.length > 0) {
+            return res.status(409).json({ message: "Email already exists" });
+        }
+
+        // Hash password and create user
+        bcrypt.hash(password, 10, (err, hash) => {
+            if (err) {
+                console.error("Password hash error:", err);
+                return res.status(500).json({ message: "Registration failed" });
             }
-        );
+
+            db.query(
+                "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'user')",
+                [name, email, hash],
+                (err, result) => {
+                    if (err) {
+                        console.error("User insert error:", err);
+                        return res.status(500).json({ message: "Registration failed" });
+                    }
+
+                    // Generate token
+                    const token = jwt.sign({ id: result.insertId }, "SECRET123", { expiresIn: "1d" });
+
+                    // Return user data and token
+                    res.json({
+                        user: {
+                            id: result.insertId,
+                            name: name,
+                            email: email,
+                            role: 'user'
+                        },
+                        token
+                    });
+                }
+            );
+        });
     });
 };
 
