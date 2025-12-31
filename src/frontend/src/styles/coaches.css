@@ -48,6 +48,21 @@
     margin-bottom: 0;
 }
 
+.coach-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 250px;
+}
+
+.mobile-booking-section {
+    display: none;
+}
+
+.desktop-booking-section {
+    display: block;
+}
+
 .coach-card {
     background: rgba(255, 255, 255, 0.07);
     padding: 1.8rem 1.3rem;
@@ -126,12 +141,20 @@
     .coaches-section {
         padding: 2rem 1rem;
         gap: 1.2rem;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .coach-card-wrapper {
+        width: 100%;
+        max-width: 100%;
     }
 
     .coach-card {
         width: 100%;
         max-width: 280px;
         padding: 1.5rem 1rem;
+        margin: 0 auto;
     }
 
     .coach-card img {
@@ -146,6 +169,17 @@
 
     .coach-card p {
         font-size: 0.9rem;
+    }
+
+    /* Show mobile booking section, hide desktop */
+    .mobile-booking-section {
+        display: block;
+        width: 100%;
+        margin-top: 1.5rem;
+    }
+
+    .desktop-booking-section {
+        display: none;
     }
 }
 
@@ -170,8 +204,13 @@
         gap: 1rem;
     }
 
+    .coach-card-wrapper {
+        width: 100%;
+    }
+
     .coach-card {
         padding: 1.2rem 0.9rem;
+        max-width: 100%;
     }
 
     .coach-card img {
@@ -185,5 +224,9 @@
 
     .coach-card p {
         font-size: 0.85rem;
+    }
+
+    .mobile-booking-section {
+        margin-top: 1rem;
     }
 }

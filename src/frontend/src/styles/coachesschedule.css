@@ -216,6 +216,16 @@
         border-radius: 15px;
     }
 
+    /* When used inline in mobile booking section */
+    .mobile-booking-section .inline-schedule-wrapper {
+        padding: 1rem 0;
+    }
+
+    .mobile-booking-section .inline-schedule-box {
+        padding: 18px;
+        border-radius: 12px;
+    }
+
     .coach-profile {
         flex-direction: column;
         text-align: center;
@@ -323,6 +333,16 @@
     .inline-schedule-box {
         padding: 16px;
         border-radius: 12px;
+    }
+
+    /* When used inline in mobile booking section */
+    .mobile-booking-section .inline-schedule-wrapper {
+        padding: 0.75rem 0;
+    }
+
+    .mobile-booking-section .inline-schedule-box {
+        padding: 14px;
+        border-radius: 10px;
     }
 
     .coach-profile {

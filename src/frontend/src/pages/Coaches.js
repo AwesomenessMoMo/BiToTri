@@ -43,43 +43,64 @@ const Coaches = () => {
           <p className="loading">No coaches available</p>
         ) : (
           coaches.map(coach => (
-            <div
-              key={coach.id}
-              className={`coach-card ${selectedCoach?.id === coach.id ? "active" : ""}`}
-              onClick={() => handleCoachClick(coach)}
-            >
-              <img
-                src={
-                  coach.image
-                    ? `${API}/uploads/${coach.image}`
-                    : "/images/placeholder.png"
-                }
-                alt={coach.name}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "/images/placeholder.png";
-                }}
-              />
+            <div key={coach.id} className="coach-card-wrapper">
+              <div
+                className={`coach-card ${selectedCoach?.id === coach.id ? "active" : ""}`}
+                onClick={() => handleCoachClick(coach)}
+              >
+                <img
+                  src={
+                    coach.image
+                      ? `${API}/uploads/${coach.image}`
+                      : "/images/placeholder.png"
+                  }
+                  alt={coach.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "/images/placeholder.png";
+                  }}
+                />
 
-              <h3>{coach.name}</h3>
-              <p>{coach.specialty}</p>
+                <h3>{coach.name}</h3>
+                <p>{coach.specialty}</p>
+              </div>
+
+              {/* Mobile: Show booking section inline below the clicked coach */}
+              {selectedCoach?.id === coach.id && (
+                <div className="mobile-booking-section">
+                  <CoachesSchedule
+                    coach={selectedCoach.name}
+                    coachId={selectedCoach.id}
+                    image={
+                      selectedCoach.image
+                        ? `${API}/uploads/${selectedCoach.image}`
+                        : "/images/placeholder.png"
+                    }
+                    specialty={selectedCoach.specialty}
+                    bio={selectedCoach.bio}
+                  />
+                </div>
+              )}
             </div>
           ))
         )}
       </div>
 
+      {/* Desktop: Show booking section at the bottom */}
       {selectedCoach && (
-        <CoachesSchedule
-          coach={selectedCoach.name}
-          coachId={selectedCoach.id}
-          image={
-            selectedCoach.image
-              ? `${API}/uploads/${selectedCoach.image}`
-              : "/images/placeholder.png"
-          }
-          specialty={selectedCoach.specialty}
-          bio={selectedCoach.bio}
-        />
+        <div className="desktop-booking-section">
+          <CoachesSchedule
+            coach={selectedCoach.name}
+            coachId={selectedCoach.id}
+            image={
+              selectedCoach.image
+                ? `${API}/uploads/${selectedCoach.image}`
+                : "/images/placeholder.png"
+            }
+            specialty={selectedCoach.specialty}
+            bio={selectedCoach.bio}
+          />
+        </div>
       )}
     </>
   );
