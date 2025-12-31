@@ -92,6 +92,10 @@ function Navbar({ openMenu, toggleMenu }) {
   return (
     <>
       <nav className="navbar">
+        <button className="mobile-menu-icon" onClick={toggleMenu}>
+          <ReorderIcon />
+        </button>
+
         <div className="logo">
           <Link to="/home">
             <img src={logo} className="logo-img" alt="logo" />
@@ -191,10 +195,6 @@ function Navbar({ openMenu, toggleMenu }) {
             </span>
           </div>
         </div>
-
-        <button className="mobile-menu-icon" onClick={toggleMenu}>
-          <ReorderIcon />
-        </button>
       </nav>
 
       {showSignup && (
