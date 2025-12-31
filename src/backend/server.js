@@ -762,6 +762,10 @@ app.get("/api/search", (req, res) => {
     );
 });
 
+// Contact form route
+const contactController = require("./controllers/contactController");
+app.post("/api/contact", contactController.sendContactMessage);
+
 
 const PORT = process.env.PORT || 8080;
 
