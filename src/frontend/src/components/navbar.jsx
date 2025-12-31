@@ -79,10 +79,8 @@ function Navbar({ openMenu, toggleMenu }) {
     setSuggestions([]);
   };
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${API}/api/auth/logout`);
-    } catch {}
+  const handleLogout = () => {
+    // Logout is handled client-side (clears localStorage)
     logout();
     navigate("/home");
   };

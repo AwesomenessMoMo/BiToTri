@@ -36,7 +36,7 @@ function LoginModal({ close, openSignup }) {
         return;
       }
 
-      login(user, token);
+      login(user);
       close();
     } catch (err) {
       setError(err?.response?.data?.message || "Server not reachable");
