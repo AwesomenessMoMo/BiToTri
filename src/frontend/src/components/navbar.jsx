@@ -124,70 +124,72 @@ function Navbar({ openMenu, toggleMenu }) {
           )}
         </div>
 
-        <div className={`nav-links ${openMenu ? "opened" : ""}`}>
-          {user?.role === "admin" && (
-            <span className="nav-text-link" onClick={() => navigate("/admin")}>
-              Admin
-            </span>
-          )}
-
-          <Link to="/store">Store</Link>
-          <Link to="/training-programs">Training Programs</Link>
-
-          {!isLoggedIn ? (
-            <>
-              <span className="nav-text-link" onClick={() => setShowLogin(true)}>
-                Login
-              </span>
-              <span className="nav-text-link" onClick={() => setShowSignup(true)}>
-                Sign Up
-              </span>
-            </>
-          ) : (
-            <div className="user-dropdown" ref={dropdownRef}>
-              <span className="nav-user" onClick={() => setOpenUserMenu(!openUserMenu)}>
-                {user.name.split(" ")[0]} ▾
-              </span>
-
-              {openUserMenu && (
-                <div className="user-menu">
-                  <h4>My Bookings</h4>
-
-                  {bookings.length === 0 ? (
-                    <p className="empty">No bookings</p>
-                  ) : (
-                    bookings.map((b) => (
-                      <div key={b.id} className="booking-item">
-                        <div>
-                          <strong>{b.coach_name}</strong>
-                          <span>
-                            {b.booking_date} @ {b.booking_time}
-                          </span>
-                        </div>
-                        <button className="cancel-btn" onClick={() => cancelBooking(b.id)}>
-                          ✖
-                        </button>
-                      </div>
-                    ))
-                  )}
-
-                  <hr />
-
-                  <span className="logout-btn" onClick={handleLogout}>
-                    Logout
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
-
-          <span className="nav-text-link" onClick={() => setOpenCart(true)}>
-            🛒 Cart ({cart.length})
-          </span>
-
+        <div className="navbar-right">
           <button className="theme-toggle-btn" onClick={toggleTheme} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
             {theme === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
           </button>
+
+          <div className={`nav-links ${openMenu ? "opened" : ""}`}>
+            {user?.role === "admin" && (
+              <span className="nav-text-link" onClick={() => navigate("/admin")}>
+                Admin
+              </span>
+            )}
+
+            <Link to="/store">Store</Link>
+            <Link to="/training-programs">Training Programs</Link>
+
+            {!isLoggedIn ? (
+              <>
+                <span className="nav-text-link" onClick={() => setShowLogin(true)}>
+                  Login
+                </span>
+                <span className="nav-text-link" onClick={() => setShowSignup(true)}>
+                  Sign Up
+                </span>
+              </>
+            ) : (
+              <div className="user-dropdown" ref={dropdownRef}>
+                <span className="nav-user" onClick={() => setOpenUserMenu(!openUserMenu)}>
+                  {user.name.split(" ")[0]} ▾
+                </span>
+
+                {openUserMenu && (
+                  <div className="user-menu">
+                    <h4>My Bookings</h4>
+
+                    {bookings.length === 0 ? (
+                      <p className="empty">No bookings</p>
+                    ) : (
+                      bookings.map((b) => (
+                        <div key={b.id} className="booking-item">
+                          <div>
+                            <strong>{b.coach_name}</strong>
+                            <span>
+                              {b.booking_date} @ {b.booking_time}
+                            </span>
+                          </div>
+                          <button className="cancel-btn" onClick={() => cancelBooking(b.id)}>
+                            ✖
+                          </button>
+                        </div>
+                      ))
+                    )}
+
+                    <hr />
+
+                    <span className="logout-btn" onClick={handleLogout}>
+                      Logout
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <span className="nav-text-link" onClick={() => setOpenCart(true)}>
+              🛒 Cart ({cart.length})
+            </span>
+          </div>
         </div>
 
         <button className="mobile-menu-icon" onClick={toggleMenu}>
