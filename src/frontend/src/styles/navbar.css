@@ -50,8 +50,18 @@
   box-sizing: border-box;
 }
 
+[data-theme="light"] .search-input {
+  background: #ffffff;
+  border: 2px solid var(--border-color);
+  color: #000;
+}
+
 .search-input::placeholder {
   color: var(--text-muted);
+}
+
+[data-theme="light"] .search-input::placeholder {
+  color: #999;
 }
 
 .search-input:focus {
