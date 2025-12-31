@@ -1,8 +1,12 @@
 .footer {
   background: var(--bg-secondary);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   padding: 60px 40px 20px;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="light"] .footer {
+  color: #000;
 }
 
 .footer-grid {
@@ -15,6 +19,11 @@
   margin: 18px 0;
   line-height: 1.6;
   font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .footer-about p {
+  color: #333;
 }
 
 .logo-img-footer {
@@ -60,7 +69,7 @@
 }
 
 [data-theme="light"] .footer-col a {
-  color: var(--text-secondary);
+  color: #000;
 }
 
 .footer-col a:hover {
@@ -75,6 +84,10 @@
   text-align: center;
   font-size: 0.9rem;
   color: var(--text-muted);
+}
+
+[data-theme="light"] .footer-bottom {
+  color: #000;
 }
 
 /* Responsive */

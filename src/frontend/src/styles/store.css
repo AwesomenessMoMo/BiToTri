@@ -15,18 +15,24 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.65);
   z-index: 0;
+  transition: background 0.3s ease;
+}
+
+[data-theme="light"] .store-bg::before {
+  background: rgba(255, 255, 255, 0.75);
 }
 
 .store-container {
   padding: 5rem 2rem;
-  color: white;
+  color: var(--text-primary);
   text-align: center;
   position: relative;
   z-index: 2;
+  transition: color 0.3s ease;
 }
 
 .store-header h1 {
-  color: #ff0000;
+  color: var(--accent-color);
   font-size: 2.7rem;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
@@ -36,7 +42,7 @@
   max-width: 650px;
   margin: 0 auto 3rem;
   line-height: 1.7;
-  color: #e0e0e0;
+  color: var(--text-secondary);
 }
 
 .store-grid {
@@ -59,9 +65,18 @@
   text-align: center;
 }
 
+[data-theme="light"] .store-item {
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
 .store-item:hover {
   transform: translateY(-8px);
   box-shadow: 0 0 40px rgba(255, 0, 0, 0.45);
+}
+
+[data-theme="light"] .store-item:hover {
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.3);
 }
 
 .store-image {
@@ -73,7 +88,7 @@
 }
 
 .store-item h2 {
-  color: #ff0000;
+  color: var(--accent-color);
   font-size: 2rem;
   margin-top: 0.7rem;
   text-transform: uppercase;

@@ -1,38 +1,43 @@
 .clothes-page {
   display: flex;
   min-height: 100vh;
-  background: #0a0a0a;
-  color: white;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .clothes-sidebar {
   width: 250px;
-  background: #111;
+  background: var(--bg-tertiary);
   padding: 2rem;
+  transition: background-color 0.3s ease;
 }
 
 .clothes-sidebar h2 {
-  color: #ff0000;
+  color: var(--accent-color);
 }
 
 .clothes-sidebar label {
   margin-top: 1rem;
   display: block;
+  color: var(--text-primary);
 }
 
 .clothes-sidebar select {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
-  background: #222;
-  color: white;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .back-btn {
   margin-top: 2rem;
   display: block;
-  color: #ff4d4d;
+  color: var(--accent-color);
 }
 
 .clothes-content {
@@ -50,15 +55,17 @@
 .size-controls button {
   margin-left: 8px;
   padding: 6px 12px;
-  background: #222;
-  color: white;
-  border: 1px solid #444;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .size-controls .active {
-  background: #ff0000;
-  border-color: #ff0000;
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
 }
 
 .clothes-grid {
@@ -79,10 +86,12 @@
 }
 
 .clothes-card {
-  background: #151515;
+  background: var(--bg-card);
   padding: 1rem;
   border-radius: 10px;
   text-align: center;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .clothes-card img {
@@ -98,12 +107,12 @@
 
 .price {
   margin: 0.4rem 0;
-  color: #ccc;
+  color: var(--text-secondary);
 }
 
 .color {
   font-size: 0.9rem;
-  color: #aaa;
+  color: var(--text-muted);
 }
 
 .clothes-card button {
