@@ -6,12 +6,14 @@ function Subplans() {
     const navigate = useNavigate();
 
     const goToCheckout = (planName, price, description) => {
+        const planData = {
+            plan: planName,
+            price,
+            description
+        };
+        localStorage.setItem("selectedPlan", JSON.stringify(planData));
         navigate("/checkout", {
-            state: {
-                plan: planName,
-                price,
-                description
-            }
+            state: planData
         });
     };
 

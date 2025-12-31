@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 import { useLocation } from "react-router-dom";
 import "../styles/checkout.css";
@@ -9,8 +9,51 @@ const Checkout = () => {
   const { cart, addToCart, removeOne, removeAll } = useCart();
   const location = useLocation();
 
-  const selectedPlan = location.state?.plan || null;
-  const selectedPrice = location.state?.price || 0;
+  const getStoredPlan = () => {
+    try {
+      const stored = localStorage.getItem("selectedPlan");
+      if (stored) {
+        const planData = JSON.parse(stored);
+        return {
+          plan: planData.plan || null,
+          price: planData.price || 0,
+          description: planData.description || ""
+        };
+      }
+    } catch (e) {
+      console.error("Error reading stored plan:", e);
+    }
+    return { plan: null, price: 0, description: "" };
+  };
+
+  const getInitialPlan = () => {
+    if (location.state?.plan) {
+      return {
+        plan: location.state.plan,
+        price: location.state.price || 0,
+        description: location.state.description || ""
+      };
+    }
+    return getStoredPlan();
+  };
+
+  const [selectedPlan, setSelectedPlan] = useState(() => getInitialPlan().plan);
+  const [selectedPrice, setSelectedPrice] = useState(() => Number(getInitialPlan().price));
+  const [planDescription, setPlanDescription] = useState(() => getInitialPlan().description);
+
+  useEffect(() => {
+    if (location.state?.plan) {
+      const planData = {
+        plan: location.state.plan,
+        price: location.state.price || 0,
+        description: location.state.description || ""
+      };
+      localStorage.setItem("selectedPlan", JSON.stringify(planData));
+      setSelectedPlan(planData.plan);
+      setSelectedPrice(Number(planData.price));
+      setPlanDescription(planData.description);
+    }
+  }, [location.state]);
 
   const [name, setName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -19,6 +62,13 @@ const Checkout = () => {
 
   const [promo, setPromo] = useState("");
   const [discount, setDiscount] = useState(0);
+
+  const removePlan = () => {
+    localStorage.removeItem("selectedPlan");
+    setSelectedPlan(null);
+    setSelectedPrice(0);
+    setPlanDescription("");
+  };
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const planTotal = Number(selectedPrice);
@@ -72,6 +122,7 @@ const Checkout = () => {
         headers: { "Content-Type": "application/json" },
       });
 
+      localStorage.removeItem("selectedPlan");
       alert("Order placed successfully!");
     } catch (err) {
       alert(err?.response?.data?.message || "Failed to place order");
@@ -88,8 +139,22 @@ const Checkout = () => {
 
           {selectedPlan && (
             <div className="checkout-item">
-              <p>{selectedPlan}</p>
-              <span>${planTotal}</span>
+              <div className="checkout-left">
+                <div>
+                  <p className="item-name">{selectedPlan}</p>
+                  {planDescription && (
+                    <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginTop: "4px" }}>
+                      {planDescription}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="checkout-right">
+                <span>${planTotal.toFixed(2)}</span>
+                <button className="remove-item" onClick={removePlan} title="Remove plan">
+                  ✖
+                </button>
+              </div>
             </div>
           )}
 
