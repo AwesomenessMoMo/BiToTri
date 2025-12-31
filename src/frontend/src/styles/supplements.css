@@ -6,11 +6,20 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+[data-theme="light"] .supplements-page {
+  background: #ffffff;
+}
+
 .filter-sidebar {
   width: 250px;
   background: var(--bg-tertiary);
   padding: 2rem;
   transition: background-color 0.3s ease;
+}
+
+[data-theme="light"] .filter-sidebar {
+  background: #ffffff;
+  border-right: 1px solid var(--border-color);
 }
 
 .filter-sidebar h2 {
