@@ -36,15 +36,15 @@
 }
 
 .search-input {
-  width: 420px;
-  padding: 10px 42px 10px 18px;
+  width: 500px;
+  padding: 10px 42px 10px 20px;
   border-radius: 50px;
   border: 1px solid #333;
   background: #111;
   color: #fff;
   outline: none;
   transition: 0.25s ease;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   box-sizing: border-box;
 }
 
