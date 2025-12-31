@@ -132,6 +132,22 @@
 .clothes-grid.size-medium img { height: 240px; }
 .clothes-grid.size-small img { height: 160px; }
 
+.clothes-card h3 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: var(--text-primary);
+}
+
+.clothes-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.clothes-card a:hover h3 {
+  color: var(--accent-color);
+  transition: color 0.3s ease;
+}
+
 .price {
   margin: 0.4rem 0;
   color: var(--text-secondary);
