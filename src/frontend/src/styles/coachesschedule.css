@@ -204,3 +204,199 @@
         transform: scale(1);
     }
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .inline-schedule-wrapper {
+        padding: 1.5rem 1rem;
+    }
+
+    .inline-schedule-box {
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .coach-profile {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .coach-img {
+        width: 140px;
+        height: 140px;
+        margin: 0 auto;
+    }
+
+    .coach-info h1 {
+        font-size: 1.6rem;
+    }
+
+    .coach-info h3 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+
+    .coach-info p {
+        max-width: 100%;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .calendar-box {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .calendar-box h2 {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+    }
+
+    .react-calendar {
+        width: 100% !important;
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .time-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    .time-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 12px;
+    }
+
+    .time-btn {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .confirmation {
+        padding: 20px;
+        margin: 30px auto;
+    }
+
+    .confirmation h3 {
+        font-size: 1.3rem;
+    }
+
+    .confirmation p {
+        font-size: 0.95rem;
+    }
+
+    .confirm-btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .popup-box {
+        width: 90%;
+        max-width: 320px;
+        padding: 25px 20px;
+    }
+
+    .popup-box h2 {
+        font-size: 1.4rem;
+    }
+
+    .popup-box p {
+        font-size: 0.95rem;
+    }
+
+    .popup-box button {
+        width: 100%;
+        padding: 12px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inline-schedule-wrapper {
+        padding: 1rem 0.75rem;
+    }
+
+    .inline-schedule-box {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .coach-profile {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .coach-img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .coach-info h1 {
+        font-size: 1.4rem;
+    }
+
+    .coach-info h3 {
+        font-size: 1rem;
+    }
+
+    .coach-info p {
+        font-size: 0.9rem;
+    }
+
+    .calendar-box h2 {
+        font-size: 1.2rem;
+    }
+
+    .react-calendar {
+        padding: 8px;
+    }
+
+    .time-section h2 {
+        font-size: 1.2rem;
+    }
+
+    .time-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .time-btn {
+        padding: 9px 8px;
+        font-size: 0.85rem;
+    }
+
+    .confirmation {
+        padding: 18px;
+        margin: 25px auto;
+    }
+
+    .confirmation h3 {
+        font-size: 1.2rem;
+    }
+
+    .confirmation p {
+        font-size: 0.9rem;
+    }
+
+    .confirm-btn {
+        padding: 11px 20px;
+        font-size: 0.95rem;
+    }
+
+    .popup-box {
+        width: 95%;
+        padding: 22px 18px;
+    }
+
+    .popup-box h2 {
+        font-size: 1.3rem;
+    }
+
+    .popup-box p {
+        font-size: 0.9rem;
+    }
+}
