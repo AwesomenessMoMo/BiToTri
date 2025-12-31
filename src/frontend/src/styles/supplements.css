@@ -212,6 +212,15 @@
     padding: 1.5rem;
   }
 
+  .header-row h1 {
+    font-size: 1.8rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+
   .products-grid,
   .products-grid.size-small,
   .products-grid.size-medium,
