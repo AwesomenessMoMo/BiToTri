@@ -370,93 +370,200 @@ const TrainingDetail = () => {
         };
     };
 
+    const getCleanTitle = (title) => {
+        return title.replace(/[🏁🔥💪🏋️⚡🏆]/g, "").trim();
+    };
+
     const generatePDFContent = (doc) => {
-        let y = 70;
-        let pageNumber = 1;
+        const cleanTitle = getCleanTitle(program.title);
+        let y = 20;
+        const pageWidth = 210;
+        const margin = 20;
+        const contentWidth = pageWidth - (margin * 2);
 
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(22);
-        doc.text(program.title, 105, y, { align: "center" });
-        y += 10;
-
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "normal");
-        doc.text("4-Week Training Program", 105, y, { align: "center" });
+        doc.setDrawColor(200, 0, 0);
+        doc.setFillColor(200, 0, 0);
+        doc.rect(margin, y, contentWidth, 8, "F");
         y += 15;
 
-        doc.setFontSize(11);
-        doc.text(doc.splitTextToSize(program.short, 170), 20, y);
-        y += 12;
+        doc.setTextColor(200, 0, 0);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(24);
+        doc.text("BI TO TRI GYM", margin, y, { align: "left" });
+        y += 8;
+
+        doc.setFontSize(18);
+        doc.text("TRAINING PROGRAM", margin, y, { align: "left" });
+        y += 15;
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.text(cleanTitle, pageWidth / 2, y, { align: "center" });
+        y += 10;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.setTextColor(100, 100, 100);
+        doc.text("4-Week Comprehensive Training Plan", pageWidth / 2, y, { align: "center" });
+        y += 20;
+
+        doc.setDrawColor(200, 0, 0);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 10;
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text("Program Overview", margin, y);
+        y += 8;
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        doc.text(doc.splitTextToSize(program.details, 170), 20, y);
-        y += 20;
+        const overviewLines = doc.splitTextToSize(program.short, contentWidth);
+        doc.text(overviewLines, margin, y);
+        y += overviewLines.length * 5 + 3;
+
+        const detailsLines = doc.splitTextToSize(program.details, contentWidth);
+        doc.text(detailsLines, margin, y);
+        y += detailsLines.length * 5 + 15;
 
         const workoutPlan = getWorkoutPlan(program.title);
 
         if (workoutPlan && workoutPlan.weeks) {
             workoutPlan.weeks.forEach((weekData, weekIndex) => {
-                if (y > 250) {
+                if (y > 260) {
                     doc.addPage();
-                    pageNumber++;
                     y = 20;
                 }
 
+                doc.setFillColor(240, 240, 240);
+                doc.rect(margin, y - 5, contentWidth, 12, "F");
+                
+                doc.setTextColor(200, 0, 0);
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(14);
-                doc.text(`Week ${weekData.week}`, 20, y);
-                y += 10;
+                doc.text(`WEEK ${weekData.week}`, margin + 5, y + 3);
+                y += 12;
 
+                doc.setTextColor(0, 0, 0);
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(9);
-                doc.text("Day", 20, y);
-                doc.text("Workout", 60, y);
-                y += 6;
-
-                doc.setLineWidth(0.5);
-                doc.line(20, y, 190, y);
+                doc.text("DAY", margin + 5, y);
+                doc.text("WORKOUT DETAILS", margin + 50, y);
                 y += 5;
 
-                weekData.days.forEach((dayData) => {
+                doc.setDrawColor(200, 0, 0);
+                doc.setLineWidth(0.3);
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 5;
+
+                weekData.days.forEach((dayData, dayIndex) => {
                     if (y > 270) {
                         doc.addPage();
-                        pageNumber++;
                         y = 20;
                     }
 
                     doc.setFont("helvetica", "bold");
                     doc.setFontSize(9);
-                    doc.text(dayData.day, 20, y);
+                    doc.setTextColor(50, 50, 50);
+                    doc.text(dayData.day.toUpperCase(), margin + 5, y);
 
                     doc.setFont("helvetica", "normal");
                     doc.setFontSize(8);
-                    const workoutLines = doc.splitTextToSize(dayData.workout, 120);
-                    doc.text(workoutLines, 60, y);
-                    y += Math.max(workoutLines.length * 4, 12);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    const workoutParts = dayData.workout.split('\n');
+                    let workoutY = y;
+                    workoutParts.forEach((part, partIndex) => {
+                        if (workoutY > 270) {
+                            doc.addPage();
+                            workoutY = 20;
+                        }
+                        if (partIndex === 0) {
+                            doc.setFont("helvetica", "bold");
+                            doc.setFontSize(9);
+                            doc.text(part, margin + 50, workoutY);
+                            workoutY += 5;
+                        } else {
+                            doc.setFont("helvetica", "normal");
+                            doc.setFontSize(8);
+                            doc.text(part.trim(), margin + 55, workoutY);
+                            workoutY += 4.5;
+                        }
+                    });
+                    y = workoutY;
 
-                    if (y < 280) {
-                        doc.setLineWidth(0.2);
-                        doc.line(20, y, 190, y);
+                    if (dayIndex < weekData.days.length - 1 && y < 270) {
+                        doc.setDrawColor(220, 220, 220);
+                        doc.setLineWidth(0.1);
+                        doc.line(margin + 5, y, pageWidth - margin - 5, y);
                         y += 3;
                     }
                 });
 
-                y += 5;
+                y += 8;
+
+                if (weekIndex < workoutPlan.weeks.length - 1) {
+                    doc.setDrawColor(200, 0, 0);
+                    doc.setLineWidth(0.3);
+                    doc.setLineDash([2, 2], 0);
+                    doc.line(margin, y, pageWidth - margin, y);
+                    doc.setLineDash([], 0);
+                    y += 8;
+                }
             });
         }
+
+        y += 10;
+        if (y > 250) {
+            doc.addPage();
+            y = 20;
+        }
+
+        doc.setDrawColor(200, 0, 0);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 10;
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("Important Notes:", margin, y);
+        y += 7;
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        const notes = [
+            "• Always warm up for 5-10 minutes before each workout",
+            "• Cool down and stretch after each session",
+            "• Rest 48-72 hours between training the same muscle groups",
+            "• Progressively increase weight or reps each week",
+            "• Stay hydrated and maintain a balanced diet",
+            "• Listen to your body and adjust intensity as needed"
+        ];
+
+        notes.forEach(note => {
+            if (y > 270) {
+                doc.addPage();
+                y = 20;
+            }
+            doc.text(note, margin + 5, y);
+            y += 6;
+        });
 
         const totalPages = doc.internal.getNumberOfPages();
         for (let i = 1; i <= totalPages; i++) {
             doc.setPage(i);
-            doc.setFont("helvetica", "italic");
+            doc.setFont("helvetica", "normal");
             doc.setFontSize(8);
-            doc.text(`Page ${i} of ${totalPages}`, 105, 290, { align: "center" });
-            doc.text("Generated by Bi To Tri Gym — Train Hard, Transform Harder.", 105, 285, { align: "center" });
+            doc.setTextColor(150, 150, 150);
+            doc.text(`Page ${i} of ${totalPages}`, pageWidth / 2, 287, { align: "center" });
+            doc.text("Bi To Tri Gym — Train Hard, Transform Harder", pageWidth / 2, 292, { align: "center" });
         }
 
-        const safeTitle = program.title.replace(/[^a-z0-9]/gi, "_");
-        doc.save(`${safeTitle}_4-week-plan.pdf`);
+        const safeTitle = cleanTitle.replace(/[^a-z0-9]/gi, "_");
+        doc.save(`${safeTitle}_4-Week_Training_Plan.pdf`);
     };
 
     return (
