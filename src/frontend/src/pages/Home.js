@@ -93,7 +93,7 @@ const Home = () => {
             </div>
 
             <div className="testimonial-section">
-                <h2>Member Transformations</h2>
+                <h2>Member Reviews</h2>
                 <div className="testimonial-slider">
                     <div className="testimonial">
                         <div className="stars">★★★★★</div>
