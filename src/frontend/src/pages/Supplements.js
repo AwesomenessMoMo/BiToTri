@@ -130,6 +130,8 @@ const Supplements = () => {
               {item.description && (
                 <p className="product-description">{item.description}</p>
               )}
+
+              <p>${item.price}</p>
               <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
             </div>
           ))}
