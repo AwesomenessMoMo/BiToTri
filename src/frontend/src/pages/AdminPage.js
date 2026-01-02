@@ -51,7 +51,18 @@ const AdminPage = () => {
     
     fetch(`${API}/api/admin/bookings`)
       .then(r => r.json())
-      .then(setBookings)
+      .then(data => {
+        const uniqueBookings = data.filter((booking, index, self) =>
+          index === self.findIndex(b => 
+            b.id === booking.id && 
+            b.user_name === booking.user_name && 
+            b.coach_name === booking.coach_name &&
+            b.booking_date === booking.booking_date &&
+            b.booking_time === booking.booking_time
+          )
+        );
+        setBookings(uniqueBookings);
+      })
       .catch(err => {
         console.error("Failed to load bookings:", err);
         toast.error("Failed to load bookings");

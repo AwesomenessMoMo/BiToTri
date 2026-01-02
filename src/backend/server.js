@@ -679,10 +679,11 @@ app.put("/api/admin/bookings/:id", (req, res) => {
 
 app.get("/api/admin/bookings", (req, res) => {
     db.query(
-        `SELECT cb.id,u.name user_name,c.name coach_name,cb.booking_date,cb.booking_time,cb.status
+        `SELECT DISTINCT cb.id,u.name user_name,c.name coach_name,cb.booking_date,cb.booking_time,cb.status
          FROM coach_bookings cb
          JOIN users u ON u.id=cb.user_id
-         JOIN coaches c ON c.id=cb.coach_id`,
+         JOIN coaches c ON c.id=cb.coach_id
+         ORDER BY cb.booking_date DESC, cb.booking_time ASC`,
         (err, r) => (err ? res.status(500).json(err) : res.json(r || []))
     );
 });
