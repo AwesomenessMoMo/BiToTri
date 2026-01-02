@@ -266,15 +266,46 @@ const AdminPage = () => {
       {tab==="bookings" && (
         <section className="admin-card">
           <table className="admin-table">
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>Coach Name</th>
+                <th>Date</th>
+                <th>Time</th>
+              </tr>
+            </thead>
             <tbody>
-              {bookings.map(b=>(
-                <tr key={b.id}>
-                  <td>{b.user_name}</td>
-                  <td>{b.coach_name}</td>
-                  <td>{b.booking_date}</td>
-                  <td>{b.booking_time}</td>
-                </tr>
-              ))}
+              {bookings.map(b=>{
+                const formatDate = (dateStr) => {
+                  if (!dateStr) return "N/A";
+                  const date = new Date(dateStr);
+                  if (isNaN(date.getTime())) return dateStr;
+                  const day = String(date.getDate()).padStart(2, '0');
+                  const month = String(date.getMonth() + 1).padStart(2, '0');
+                  const year = date.getFullYear();
+                  return `${day}/${month}/${year}`;
+                };
+
+                const formatTime = (timeStr) => {
+                  if (!timeStr) return "N/A";
+                  if (timeStr.includes(':')) {
+                    const parts = timeStr.split(':');
+                    const hours = String(parseInt(parts[0])).padStart(2, '0');
+                    const minutes = String(parseInt(parts[1])).padStart(2, '0');
+                    return `${hours}:${minutes}`;
+                  }
+                  return timeStr;
+                };
+
+                return (
+                  <tr key={b.id}>
+                    <td>{b.user_name || "N/A"}</td>
+                    <td>{b.coach_name || "N/A"}</td>
+                    <td>{formatDate(b.booking_date)}</td>
+                    <td>{formatTime(b.booking_time)}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </section>
