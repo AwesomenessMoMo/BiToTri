@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/trainingdetail.css";
 import jsPDF from "jspdf";
+import { useAuth } from "../context/AuthContext";
+import LoginModal from "../components/LoginModal";
+import SignupModal from "../components/SignupModal";
 
 const TrainingDetail = () => {
     const { name } = useParams();
     const navigate = useNavigate();
+    const { isLoggedIn } = useAuth();
+    const [showLogin, setShowLogin] = useState(false);
+    const [showSignup, setShowSignup] = useState(false);
 
     const getWorkoutPlan = (programTitle) => {
         const plans = {
@@ -364,6 +370,10 @@ const TrainingDetail = () => {
     }
 
     const handleGetCoach = () => {
+        if (!isLoggedIn) {
+            setShowLogin(true);
+            return;
+        }
         navigate("/coaches");
     };
 
@@ -528,45 +538,67 @@ const TrainingDetail = () => {
     };
 
     return (
-        <div className="training-detail-page">
-            <div className="training-detail-container">
-                <button className="back-button" onClick={() => navigate("/training-programs")}>
-                    ← Back to Programs
-                </button>
+        <>
+            <div className="training-detail-page">
+                <div className="training-detail-container">
+                    <button className="back-button" onClick={() => navigate("/training-programs")}>
+                        ← Back to Programs
+                    </button>
 
-                <div className="program-header">
-                    <h1>{program.title}</h1>
-                    <p className="program-short">{program.short}</p>
-                </div>
-
-                <div className="program-content">
-                    <div className="program-section">
-                        <h2>Program Overview</h2>
-                        <p className="program-details">{program.details}</p>
+                    <div className="program-header">
+                        <h1>{program.title}</h1>
+                        <p className="program-short">{program.short}</p>
                     </div>
 
-                    <div className="program-section">
-                        <h2>What's Included</h2>
-                        <ul className="program-features">
-                            <li>4-week structured training plan</li>
-                            <li>Detailed workout instructions</li>
-                            <li>Progressive overload guidelines</li>
-                            <li>Recovery and rest day recommendations</li>
-                            <li>Nutrition tips for optimal results</li>
-                        </ul>
-                    </div>
+                    <div className="program-content">
+                        <div className="program-section">
+                            <h2>Program Overview</h2>
+                            <p className="program-details">{program.details}</p>
+                        </div>
 
-                    <div className="program-actions">
-                        <button className="coach-button" onClick={handleGetCoach}>
-                            Get a Coach
-                        </button>
-                        <button className="pdf-button" onClick={handleDownloadPDF}>
-                            Download PDF
-                        </button>
+                        <div className="program-section">
+                            <h2>What's Included</h2>
+                            <ul className="program-features">
+                                <li>4-week structured training plan</li>
+                                <li>Detailed workout instructions</li>
+                                <li>Progressive overload guidelines</li>
+                                <li>Recovery and rest day recommendations</li>
+                                <li>Nutrition tips for optimal results</li>
+                            </ul>
+                        </div>
+
+                        <div className="program-actions">
+                            <button className="coach-button" onClick={handleGetCoach}>
+                                Get a Coach
+                            </button>
+                            <button className="pdf-button" onClick={handleDownloadPDF}>
+                                Download PDF
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            {showLogin && (
+                <LoginModal
+                    close={() => setShowLogin(false)}
+                    openSignup={() => {
+                        setShowLogin(false);
+                        setShowSignup(true);
+                    }}
+                />
+            )}
+
+            {showSignup && (
+                <SignupModal
+                    close={() => setShowSignup(false)}
+                    openLogin={() => {
+                        setShowSignup(false);
+                        setShowLogin(true);
+                    }}
+                />
+            )}
+        </>
     );
 };
 
