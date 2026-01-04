@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import "../styles/coaches.css";
 import CoachesSchedule from "./CoachesSchedule";
 import API from "../config/api";
 
 const Coaches = () => {
+  const [searchParams] = useSearchParams();
   const [coaches, setCoaches] = useState([]);
   const [selectedCoach, setSelectedCoach] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,12 +16,22 @@ const Coaches = () => {
       .then(data => {
         setCoaches(data || []);
         setLoading(false);
+
+        // Auto-select coach if coachId is in query params
+        const coachIdParam = searchParams.get("coachId");
+        if (coachIdParam) {
+          const coachId = parseInt(coachIdParam);
+          const coach = data.find(c => c.id === coachId);
+          if (coach) {
+            setSelectedCoach(coach);
+          }
+        }
       })
       .catch(err => {
         console.error("Failed to fetch coaches:", err);
         setLoading(false);
       });
-  }, []);
+  }, [searchParams]);
 
   const handleCoachClick = (coach) => {
     if (selectedCoach?.id === coach.id) {

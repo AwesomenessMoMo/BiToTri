@@ -710,9 +710,10 @@ app.get("/api/search", (req, res) => {
             if (!err && rows) {
                 results.push(
                     ...rows.map(r => ({
+                        id: r.id,
                         name: r.name,
                         type: "Coach",
-                        path: "/coaches"
+                        path: `/coaches?coachId=${r.id}`
                     }))
                 );
             }
@@ -727,9 +728,10 @@ app.get("/api/search", (req, res) => {
             if (!err && rows) {
                 results.push(
                     ...rows.map(r => ({
+                        id: r.id,
                         name: r.name,
                         type: "Supplement",
-                        path: "/supplements"
+                        path: `/product/supplement/${r.id}`
                     }))
                 );
             }
@@ -744,9 +746,10 @@ app.get("/api/search", (req, res) => {
             if (!err && rows) {
                 results.push(
                     ...rows.map(r => ({
+                        id: r.id,
                         name: r.name,
                         type: "Clothes",
-                        path: "/clothes"
+                        path: `/product/clothes/${r.id}`
                     }))
                 );
             }
